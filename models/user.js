@@ -29,9 +29,9 @@ var userSchema = mongoose.Schema({
 }, { timestamp: true }
 )
 
-userSchema.statics.hashPassword = function hashPassword(password){
+userSchema.statics.hash = function hashPassword(password){
     return bcrypt.hashSync(password,10);
-}
+}   
 
 userSchema.methods.isValid = function(hashedpassword){
     return  bcrypt.compareSync(hashedpassword, this.password);

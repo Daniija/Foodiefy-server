@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
         email: req.body.email,
         name: req.body.name,
         role: "user",
-        password: User.hashPassword(req.body.p1),
+        password: User.hash(req.body.p1),
     });
     User.find({ email: req.body.email }, (err, users) => {
 
@@ -69,8 +69,8 @@ exports.logIn = (req, res) => {
                         res.json({ msg: 'Your password is incorrect' })
                     }
                 }).catch(err => {
-                    console.log("Somthing went wrong");
-                    res.json({ msg: 'Somthing went wrong' })
+                    console.log(err);
+                    res.json({ msg: 'Somthing went wrong', err })
                 })
             }
         }

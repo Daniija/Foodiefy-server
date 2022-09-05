@@ -19,7 +19,7 @@ app.use('/backend/uploads',express.static('uploads'))
 // dependency
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(cors({origin: 'https://foodiefyja.herokuapp.com'}))
+app.use(cors({origin: '*'}))
 
 // http://localhost:4200
 
