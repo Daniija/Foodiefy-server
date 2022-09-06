@@ -201,11 +201,11 @@ exports.resestPasswordDone = (req, res) => {
 exports.changePassword = (req, res) => {
     User.findOne({ email: req.email }, (err, user) => {
         if (err) {
-            res.json({ msg: "Somthing went wrong!!", err });
+            res.json({ msg: "Somthing went wrong" });
         }
         else {
             if (!user) {
-                res.json({ msg: "Somthing went wrong", err });
+                res.json({ msg: "Somthing went wrong" });
             }
             else {
                 bcrypt.compare(req.body.op, user.password).then(match => {
@@ -216,7 +216,7 @@ exports.changePassword = (req, res) => {
                         User.updateOne({ email: req.email },
                             { password: p }, function (err, user) {
                                 if (err) {
-                                    res.json({ msg: "Somthing went wrong", err });
+                                    res.json({ msg: "Somthing went wrong" });
                                 }
                                 else {
                                     console.log("Password has been changed successfully");
@@ -229,11 +229,9 @@ exports.changePassword = (req, res) => {
                         res.json({ msg: 'Password is Incorrect' })
                     }
                 }).catch(err => {
-                    res.json({ msg: 'Somthing went wrong', err })
+                    res.json({ msg: 'Somthing went wrong' })
                 })
             }
         }
     })
 }
-
-

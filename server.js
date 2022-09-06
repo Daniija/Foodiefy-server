@@ -1,9 +1,9 @@
-const express = require('express')
-const app = express()
-var cors = require('cors')
+const express = require('express');
+const app = express();
+var cors = require('cors');
 const helmet = require("helmet");
-var bodyParser = require('body-parser')
-const multer = require('multer')
+var bodyParser = require('body-parser');
+const multer = require('multer');
 const PORT = process.env.PORT || 3000
 
 // all routes
