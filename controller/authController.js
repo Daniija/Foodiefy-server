@@ -76,6 +76,7 @@ exports.logIn = (req, res) => {
         }
     })
 }
+
 function getEmail(email) {
     Otp.find({ email: email }, (err, otps) => {
 
@@ -200,7 +201,7 @@ exports.resestPasswordDone = (req, res) => {
 exports.changePassword = (req, res) => {
     User.findOne({ email: req.email }, (err, user) => {
         if (err) {
-            res.json({ msg: "Somthing went wrong", err });
+            res.json({ msg: "Somthing went wrong!!", err });
         }
         else {
             if (!user) {
