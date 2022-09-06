@@ -30,8 +30,8 @@ exports.editProfile = (req, res) => {
         contact: req.body.contact
     }, function (err, user) {
         if (err) {
-            console.log("Something went Wrong")
-            res.json({ errormsg: "Something went Wrong" });
+            console.log("Something went Wrong!!!")
+            res.json({ errormsg: "Something went Wrong", err });
         }
         else {
             console.log("Profile has been edited successfully");
