@@ -11,8 +11,9 @@ exports.addFood = async (req, res) => {
     let quantity;
     let limit;
     if (!isNaN(req.body.foodqty)) {
-
+        
         if (req.body.foodqty <= 0) {
+            console.log(req.body);
             available = false;
             quantity = 0;
             limit = false;
@@ -20,6 +21,7 @@ exports.addFood = async (req, res) => {
         else {
             available = true;
             quantity = req.body.foodqty;
+            console.log(req.body);
             limit = false;
         }
         if (req.body.foodqty == -1) {
@@ -30,6 +32,7 @@ exports.addFood = async (req, res) => {
         // **********************
         try {
             const image = req.file
+            console.log(req.file);
             const imageUrl = await fileUploadmiddleware.uploadImage(image)
             var food = new Food({
                 foodname: req.body.foodname,
