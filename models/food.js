@@ -10,7 +10,6 @@ var foodSchema = mongoose.Schema({
       
     },
     foodimage: {
-        data: Buffer,
         type: String,
     },
     foodqty: {
