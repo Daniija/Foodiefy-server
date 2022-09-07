@@ -36,6 +36,7 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
     blobStream.on('finish', () => {
         const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
         resolve(publicUrl)
+        console.log(publicUrl);
     }).on('error', () => {
         console.error();
         reject(`Unable to upload image, something went wrong!!!!`)
@@ -45,7 +46,7 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
 
 exports.deleteImage = (filename) => new Promise((resolve, reject) => {
     let fname = filename;
-    let fnames = fname.split('canteen-assets');
+    let fnames = fname.split('foodiefy-images');
     let x= fnames[1].substring(fnames[1].length, 1);
     storage1
         .bucket(process.env.BUCKET)
