@@ -21,7 +21,8 @@ const {Storage} = require('@google-cloud/storage');
 const storage1 = new Storage({keyFilename: process.env.KEYFILE});
 const bucket = storage1.bucket(process.env.BUCKET);
 
-Storage.getBuckets().then(x => console.log(x))
+storage1.getBuckets().then(x => console.log(x))
+
 exports.uploadImage = (file) => new Promise((resolve, reject) => {
     const {originalname, buffer} = file
     let fname = originalname.replace(originalname,getTime()+originalname)
