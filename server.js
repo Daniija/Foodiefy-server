@@ -27,13 +27,13 @@ app.use(cors({origin: '*'}))
 app.use(helmet());
 
 //image google cloud cloud
-const multerMid = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 5 * 1024 * 1024,
-  },
-})
-app.use(multerMid.single('file'))
+// const multerMid = multer({
+//   storage: multer.memoryStorage(),
+//   limits: {
+//     fileSize: 5 * 1024 * 1024,
+//   },
+// })
+// app.use(multerMid.single('file'))
 
 
 
