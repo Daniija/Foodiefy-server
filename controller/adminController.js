@@ -124,8 +124,8 @@ exports.editFood = (req, res) => {
         })
     }
     else {
-        console.log("Invalid Quantity!");
-        return res.json({ errormsg: 'Invalid Quantity!' });
+        console.log("Invalid Quantity!!");
+        return res.json({ errormsg: 'Invalid Quantity!!' });
     }
 
 
@@ -205,8 +205,8 @@ exports.editFoodWithImage = async (req, res) => {
 
     }
     else {
-        console.log("Invalid Quantity!");
-        return res.json({ errormsg: 'Invalid Quantity!' });
+        console.log("Invalid Quantity!!!!");
+        return res.json({ errormsg: 'Invalid Quantity!!!!' });
     }
 
 
