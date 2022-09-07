@@ -22,6 +22,9 @@ const storage1 = new Storage({keyFilename: process.env.KEYFILE});
 const bucket = storage1.bucket(process.env.BUCKET);
 
 exports.uploadImage = (file) => new Promise((resolve, reject) => {
+    console.log(reject);
+    console.log(file);
+    console.log(resolve);
     const {originalname, buffer} = file
     let fname = originalname.replace(originalname,getTime()+originalname)
     fname = fname.split(' ').join('_');

@@ -48,14 +48,15 @@ exports.addFood = async (req, res) => {
             }
             catch (err) {
                 console.log(err);
-                console.log("An error has occured while adding item")
-                return res.json({ errormsg: 'Somthing went wrong' });
+                console.log("An error has occured while adding item", err)
+                console.error();
+                return res.json({ errormsg: 'Somthing went wrong', err});
             }
         }
         catch (err) {
             console.log(err);
-            console.log("An error has occured while adding item")
-            return res.json({ errormsg: 'Somthing went wrong' });
+            console.log("An error has occured while adding item", err)
+            return res.json({ errormsg: 'Somthing went wrong', err});
         }
         // **********************
 
