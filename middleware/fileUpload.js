@@ -17,28 +17,28 @@ function getTime() {
 }
 
 // google cloud
-const {Storage} = require('@google-cloud/storage');
-const storage1 = new Storage({keyFilename: process.env.KEYFILE});
-const bucket = storage1.bucket(process.env.BUCKET);
+// const {Storage} = require('@google-cloud/storage');
+// const storage1 = new Storage({keyFilename: process.env.KEYFILE});
+// const bucket = storage1.bucket(process.env.BUCKET);
 
-exports.uploadImage = (file) => new Promise((resolve, reject) => {
-    const {originalname, buffer} = file
-    let fname = originalname.replace(originalname,getTime()+originalname)
-    fname = fname.split(' ').join('_');
-    fname = fname.split('/').join('_');
-    const blob = bucket.file(fname)
-    const blobStream = blob.createWriteStream({
-        resumable: false
-    })
+// exports.uploadImage = (file) => new Promise((resolve, reject) => {
+//     const {originalname, buffer} = file
+//     let fname = originalname.replace(originalname,getTime()+originalname)
+//     fname = fname.split(' ').join('_');
+//     fname = fname.split('/').join('_');
+//     const blob = bucket.file(fname)
+//     const blobStream = blob.createWriteStream({
+//         resumable: false
+//     })
 
-    blobStream.on('finish', () => {
-        const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
-        resolve(publicUrl)
-    }).on('error', () => {
-        console.error();
-        reject(`Unable to upload image, something went wrong!!!!`)
-    }).end(buffer)
-})
+//     blobStream.on('finish', () => {
+//         const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
+//         resolve(publicUrl)
+//     }).on('error', () => {
+//         console.error();
+//         reject(`Unable to upload image, something went wrong!!!!`)
+//     }).end(buffer)
+// })
 
 
 exports.deleteImage = (filename) => new Promise((resolve, reject) => {
