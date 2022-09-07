@@ -22,9 +22,6 @@ const storage1 = new Storage({keyFilename: process.env.KEYFILE});
 const bucket = storage1.bucket(process.env.BUCKET);
 
 exports.uploadImage = (file) => new Promise((resolve, reject) => {
-    console.log(reject);
-    console.log(file);
-    console.log(resolve);
     const {originalname, buffer} = file
     let fname = originalname.replace(originalname,getTime()+originalname)
     fname = fname.split(' ').join('_');
@@ -33,13 +30,13 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
     const blobStream = blob.createWriteStream({
         resumable: false
     })
+
     blobStream.on('finish', () => {
         const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
         resolve(publicUrl)
-        console.log(publicUrl);
     }).on('error', () => {
         console.error();
-        reject(`Unable to upload image, something went wrong!!!!`)
+        reject(`Unable to upload image, something went wrong!!!!`, error)
     }).end(buffer)
 })
 
