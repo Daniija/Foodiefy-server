@@ -31,14 +31,14 @@ exports.addFood = async (req, res) => {
         }
         // **********************
         try {
-            // const image = req.file
-            // console.log(req.file);
-            // const imageUrl = await fileUploadmiddleware.uploadImage(image)
+            const image = req.file
+            console.log(req.file);
+            const imageUrl = await fileUploadmiddleware.uploadImage(image)
             var food = new Food({
                 foodname: req.body.foodname,
                 foodqty: quantity,
                 foodprice: req.body.foodprice,
-                // foodimage: imageUrl,
+                foodimage: imageUrl,
                 foodavail: available,
                 unlimited: limit
             })
@@ -124,8 +124,8 @@ exports.editFood = (req, res) => {
         })
     }
     else {
-        console.log("Invalid Quantity!!");
-        return res.json({ errormsg: 'Invalid Quantity!!' });
+        console.log("Invalid Quantity!");
+        return res.json({ errormsg: 'Invalid Quantity!' });
     }
 
 
@@ -166,9 +166,9 @@ exports.editFoodWithImage = async (req, res) => {
                     }
                     else {
                         try {
-                            // var x = await fileUploadmiddleware.deleteImage(data.foodimage);
-                            // const image = req.file
-                            // const imageUrl = await fileUploadmiddleware.uploadImage(image)
+                            var x = await fileUploadmiddleware.deleteImage(data.foodimage);
+                            const image = req.file
+                            const imageUrl = await fileUploadmiddleware.uploadImage(image)
                             Food.updateOne({ _id: req.body._id }, {
                                 foodname: req.body.foodname,
                                 foodprice: req.body.foodprice,
@@ -205,8 +205,8 @@ exports.editFoodWithImage = async (req, res) => {
 
     }
     else {
-        console.log("Invalid Quantity!!!!");
-        return res.json({ errormsg: 'Invalid Quantity!!!!' });
+        console.log("Invalid Quantity!");
+        return res.json({ errormsg: 'Invalid Quantity!' });
     }
 
 

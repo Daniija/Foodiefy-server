@@ -9,9 +9,9 @@ var foodSchema = mongoose.Schema({
         type: Number,
       
     },
-    // foodimage: {
-    //     type: String,
-    // },
+    foodimage: {
+        type: String,
+    },
     foodqty: {
         type: Number,
         default: 0
