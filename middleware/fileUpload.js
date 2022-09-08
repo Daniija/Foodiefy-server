@@ -31,11 +31,10 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
         resumable: false
     });
 
-    blobStream.on("error", (err) => {
-        res.status(500).send({ message: err.message });
-      });
+    
 
-    blobStream.on('finish', () => {
+    blobStream.on('finish', (err) => {
+        console.log(err);
         const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
         resolve(publicUrl)
     }).on('error', () => {
