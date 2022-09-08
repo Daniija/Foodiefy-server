@@ -3,63 +3,59 @@ var Food = require('../models/food')
 var User = require('../models/user')
 var Order = require('../models/order')
 var Feedback = require('../models/feedback')
-// var QRCode = require('qrcode')
+var QRCode = require('qrcode')
 const fileUploadmiddleware = require('../middleware/fileUpload')
 
 exports.addFood = async (req, res) => {
-    let available;
-    let quantity;
+    // var file = req.file
+    let avail;
+    let qty;
     let limit;
     if (!isNaN(req.body.foodqty)) {
-        
+
         if (req.body.foodqty <= 0) {
-            console.log(req.body);
-            available = false;
-            quantity = 0;
+            avail = false;
+            qty = 0;
             limit = false;
         }
         else {
-            available = true;
-            quantity = req.body.foodqty;
-            console.log(req.body);
+            avail = true;
+            qty = req.body.foodqty;
             limit = false;
         }
         if (req.body.foodqty == -1) {
-            available = true;
-            quantity = -1;
+            avail = true;
+            qty = -1;
             limit = true;
         }
         // **********************
         try {
             const image = req.file
-            console.log(req.file);
             const imageUrl = await fileUploadmiddleware.uploadImage(image)
             var food = new Food({
                 foodname: req.body.foodname,
-                foodqty: quantity,
+                foodqty: qty,
                 foodprice: req.body.foodprice,
+                // foodimage: file.filename,
                 foodimage: imageUrl,
-                foodavail: available,
+                foodavail: avail,
                 unlimited: limit
             })
             try {
                 doc = food.save();
-                console.log("Item has been added");
+                console.log("food added by admin");
                 const io = req.app.get('io');
-                io.emit("Food Added", " Item has been added");
-                return res.json({ msg: 'Item added' });
+                io.emit("foodcrudbyadmin", " food crud operation done by admin!");
+                return res.json({ msg: 'Food added' });
             }
             catch (err) {
-                console.log(err);
-                console.log("An error has occured while adding item!!!", err)
-                console.error();
-                return res.json({ errormsg: 'Somthing went wrong', err});
+                console.log("some error while adding food by admin")
+                return res.json({ errormsg: 'Somthing went wrong' });
             }
         }
         catch (err) {
-            console.log(err);
-            console.log("An error has occured while adding item", err)
-            return res.json({ errormsg: 'Somthing went wrong', err});
+            console.log("some error while adding food by admin")
+            return res.json({ errormsg: 'Somthing went wrong' });
         }
         // **********************
 
@@ -75,50 +71,52 @@ exports.getallFoodItem = (req, res) => {
 
     Food.find({}, (err, items) => {
         if (err) {
-            console.log("Cannot fetch item, Please try again!")
+            console.log("some error while fetching all food by admin")
             res.status(500).json({ errormsg: 'Somthing went wrong' })
         }
         res.json({ msg: items })
     })
 }
 
+
 exports.editFood = (req, res) => {
-    let available;
-    let quantity;
+    let avail;
+    let qty;
     if (!isNaN(req.body.foodqty)) {
         if (req.body.foodqty <= 0) {
-            available = false;
-            quantity = 0;
+            avail = false;
+            qty = 0;
         }
         else {
-            available = true;
-            quantity = req.body.foodqty
+            avail = true;
+            qty = req.body.foodqty
         }
         if (req.body.foodqty == -1) {
+            // avail = true;
 
-            quantity= -1;
+            qty = -1;
             if (req.body.isitavail == "yes") {
-                available = true;
+                avail = true;
             }
             else {
-                available = false;
+                avail = false;
             }
         }
         Food.updateOne({ _id: req.body._id }, {
             foodname: req.body.foodname,
             foodprice: req.body.foodprice,
-            foodqty: quantity,
-            foodavail: available
+            foodqty: qty,
+            foodavail: avail
         }, function (err, item) {
 
             if (err) {
-                console.log("Cannot edit item without an image attached");
+                console.log("some error in edit food without image")
                 return res.json({ errormsg: 'Somthing went wrong' });
             }
             else {
-                console.log("Cannot edit item without an image attached");
+                console.log("Edited food without image");
                 const io = req.app.get('io');
-                io.emit("Item Added", " Item has been added");
+                io.emit("foodcrudbyadmin", " food crud operation done by admin!");
                 return res.json({ msg: 'Edited food without image' });
             }
         })
@@ -132,36 +130,36 @@ exports.editFood = (req, res) => {
 }
 
 exports.editFoodWithImage = async (req, res) => {
-    let available;
-    let quantity;
+    let avail;
+    let qty;
     if (!isNaN(req.body.foodqty)) {
         if (req.body.foodqty <= 0) {
-            available = false;
-            quantity = 0;
+            avail = false;
+            qty = 0;
         }
         else {
-            available = true;
-            quantity = req.body.foodqty;
+            avail = true;
+            qty = req.body.foodqty;
         }
         if (req.body.foodqty == -1) {
             // avail = true;
-            quantity = -1;
+            qty = -1;
             if (req.body.isitavail == "yes") {
-                available = true;
+                avail = true;
             }
             else {
-                available = false;
+                avail = false;
             }
         }
         try {
             Food.findOne({ _id: req.body._id }, async (err, data) => {
                 if (err) {
-                    console.log("Item Cannot be Deleted");
+                    console.log("error in delete food by admin");
                     return res.json({ errormsg: 'Somthing went wrong' });
                 }
                 else {
                     if (!data) {
-                        console.log("Item Cannot be Deleted");
+                        console.log("error in delete food by admin");
                         return res.json({ errormsg: 'Somthing went wrong' });
                     }
                     else {
@@ -173,22 +171,23 @@ exports.editFoodWithImage = async (req, res) => {
                                 foodname: req.body.foodname,
                                 foodprice: req.body.foodprice,
                                 foodqty: qty,
+                                // foodimage: file.filename,
                                 foodimage: imageUrl,
-                                foodavail: available
+                                foodavail: avail
                             }, function (err, item) {
                                 if (err) {
-                                    console.log("Cannot edit item without an image attached")
+                                    console.log("some error in edit food with image")
                                     return res.json({ errormsg: 'Somthing went wrong' });
                                 }
                                 else {
-                                    console.log("Item has been Edited successfully");
+                                    console.log("Edited food with image");
                                     const io = req.app.get('io');
-                                    io.emit("Food Added", " Item has been added");
+                                    io.emit("foodcrudbyadmin", " food crud operation done by admin!");
                                     return res.json({ msg: 'Edited food with image' });
                                 }
                             })
                         } catch (error) {
-                            console.log("Item Cannot be Deleted");
+                            console.log("error in delete food by admin");
                             return res.json({ errormsg: 'Somthing went wrong' });
                         }
 
@@ -199,7 +198,7 @@ exports.editFoodWithImage = async (req, res) => {
             })
         }
         catch (err) {
-            console.log("Error!! Item Cannot be Edited")
+            console.log("some error while editing  food with image by admin")
             return res.json({ errormsg: 'Somthing went wrong' });
         }
 
@@ -216,12 +215,12 @@ exports.deleteFood = (req, res) => {
 
     Food.findOne({ _id: req.params.id }, async (err, data) => {
         if (err) {
-            console.log("Item Cannot be Deleted");
+            console.log("error in delete food by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
             if (!data) {
-                console.log("Item Cannot be Deleted");
+                console.log("error in delete food by admin");
                 return res.json({ errormsg: 'Somthing went wrong' });
             }
             else {
@@ -229,15 +228,15 @@ exports.deleteFood = (req, res) => {
                     var x = await fileUploadmiddleware.deleteImage(data.foodimage);
                     Food.deleteOne({ _id: req.params.id }, (error) => {
                         if (error) {
-                            console.log("Item Cannot be Deleted");
+                            console.log("error in delete food by admin");
                             return res.json({ errormsg: 'Somthing went wrong' });
                         }
                     })
                     const io = req.app.get('io');
-                    io.emit("Food Added", " Item has been added");
-                    return res.json({ msg: 'Item has been Deleted' });
+                    io.emit("foodcrudbyadmin", " food crud operation done by admin!");
+                    return res.json({ msg: 'food deleted by admin' });
                 } catch (error) {
-                    console.log("Item Cannot be Deleted");
+                    console.log("error in delete food by admin");
                     return res.json({ errormsg: 'Somthing went wrong' });
                 }
 
@@ -251,7 +250,7 @@ exports.deleteFood = (req, res) => {
 exports.getallUser = (req, res) => {
     User.find({ role: "user" }, (err, usr) => {
         if (err) {
-            console.log("Cannot get all users");
+            console.log("error in get all user by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
@@ -265,12 +264,12 @@ exports.block = (req, res) => {
     var id = req.params.id
     User.updateOne({ _id: id }, { blocked: true }, (err, user) => {
         if (err) {
-            console.log("User Cannot be blocked");
+            console.log("error in block user by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
-            console.log("User Has been blocked");
-            res.status(201).json({ msg: "User has been blocked" });
+            console.log("blocked user");
+            res.status(201).json({ msg: "blocked user!" });
         }
     })
 
@@ -279,11 +278,11 @@ exports.unblock = (req, res) => {
     var id = req.params.id
     User.updateOne({ _id: id }, { blocked: false }, (err, user) => {
         if (err) {
-            console.log("Error has occured,User Cannot be unblocked ");
+            console.log("error in unblock user by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
-            console.log("User has been unblocked");
+            console.log("unblocked user");
             res.status(201).json({ msg: "unblocked user!" });
         }
     })
@@ -298,7 +297,7 @@ exports.getallOrders = (req, res) => {
     // picked up
     Order.find({ $or: [{ status: { $ne: "picked up" } }, { paymentstatus: "unpaid" }], orderdate: date }, (err, orders) => {
         if (err) {
-            console.log("Error, cannot get all items");
+            console.log("error in get all order by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
@@ -311,16 +310,17 @@ exports.getallOrders = (req, res) => {
 
 
 exports.updateorderstatus = (req, res) => {
+    // console.log(req.body.email);
     Order.updateOne({ _id: req.body.id }, { status: req.body.status }, (err, done) => {
         if (err) {
-            console.log("Error, Status cannot be updated");
+            console.log("error in update status of order by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
             console.log("order status updated");
             const io = req.app.get('io');
-            io.emit(req.body.email, "Order Status has been updated");
-            res.json({ msg: "Your Order has been Successfully updated" });
+            io.emit(req.body.email, "order status updated");
+            res.json({ msg: "successfully updated order status!" });
         }
     })
 }
@@ -330,13 +330,13 @@ exports.updateorderstatus = (req, res) => {
 exports.deleteOrder = (req, res) => {
     Order.deleteOne({ _id: req.params.id }, (error) => {
         if (error) {
-            console.log("Error, Cannot delete this order");
+            console.log("error in delete order by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
     })
     const io = req.app.get('io');
-    io.emit("orderdelete", "Order has been removed Successfully");
-    return res.json({ msg: 'Item has beem deleted Successfully' });
+    io.emit("orderdelete", "order deleted by admin!");
+    return res.json({ msg: 'food deleted by admin' });
 }
 
 
@@ -346,7 +346,7 @@ exports.getoneOrder = (req, res) => {
     var id = req.params.id
     Order.find({ _id: id }, (err, order) => {
         if (err) {
-            console.log("Cannot get an Order");
+            console.log("error in get one order by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         return res.send(order);
@@ -358,7 +358,7 @@ exports.getOneuser = (req, res) => {
     var id = req.params.id
     User.findOne({ _id: id }, (err, user) => {
         if (err) {
-            console.log("Cannot get an Order");
+            console.log("error in get one user by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         res.status(200).json({ msg: user })
@@ -372,7 +372,7 @@ exports.getorderHistory = (req, res) => {
     let total = 0;
     Order.find({ orderdate: date }, (err, orders) => {
         if (err) {
-            console.log("Error, Cannot get Order History");
+            console.log("error in get order history  by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         for (let i = 0; i < orders.length; i++) {
@@ -402,22 +402,47 @@ exports.getorderHistory = (req, res) => {
 exports.updatePaymentstatus = (req, res) => {
     Order.updateOne({ _id: req.body.id }, { paymentstatus: req.body.paymentstatus }, (err, done) => {
         if (err) {
-            console.log("Error, Cannot update order payment");
+            console.log("error in update payment status of order by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
-            console.log("Order status has been updated Successfully");
+            console.log("order  payment status updated");
             const io = req.app.get('io');
-            io.emit(req.body.email, "order status has been updated");
-            res.json({ msg: "Your payment status has been updated Successfully!" });
+            io.emit(req.body.email, "order status updated");
+            res.json({ msg: "successfully updated order payment status!" });
         }
     })
 }
 
+
+exports.getQrcode = (req, res) => {
+    var id = req.params.id
+    Order.findOne({ _id: id }, (err, order) => {
+        if (err) {
+            console.log("error while generating qr code of order by admin");
+            return res.json({ errormsg: 'Somthing went wrong' });
+        }
+        if (order.status == "completed" || order.status == "picked up") {
+            QRCode.toDataURL(id).then(url => {
+                res.json({ msg: url });
+            }).catch(err => {
+                console.log("error while generating qr code of order by admin");
+                return res.json({ errormsg: 'error while generating qr code' });
+            })
+        }
+        else {
+            console.log("order status must be completed or pickup for getting QR code");
+            return res.json({ errormsg: 'error while generating qr code' });
+        }
+    })
+}
+
+
+
 exports.getallFeedback = (req, res) => {
     Feedback.find({}, (err, feedbacks) => {
         if (err) {
-            console.log("There has been an error, cannot get feedback");
+            console.log("error in get all feedback by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
@@ -431,9 +456,9 @@ exports.getallFeedback = (req, res) => {
 exports.deleteFeedback = (req, res) => {
     Feedback.deleteOne({ _id: req.params.id }, (error) => {
         if (error) {
-            console.log("Error, Feedback cannot be deleted");
+            console.log("error in delete feedback by admin");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
     })
-    return res.json({ msg: 'Feedback has been deleted successfully' });
+    return res.json({ msg: 'successfully feedback deleted' });
 }
