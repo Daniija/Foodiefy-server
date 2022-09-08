@@ -60,7 +60,7 @@ exports.logIn = (req, res) => {
                         console.log("You have been logged in successfully");
                         let payload = { subject: user._id, email: user.email }
                         let token = jwt.sign(payload, process.env.SECRETKEY, {
-                            expiresIn: "24h"
+                            expiresIn: "1h"
                         })
                         res.status(200).json({ token: token, role: user.role, blocked: user.blocked })
                     }
