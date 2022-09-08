@@ -3,7 +3,6 @@ var Food = require('../models/food')
 var User = require('../models/user')
 var Order = require('../models/order')
 var Feedback = require('../models/feedback')
-// var QRCode = require('qrcode')
 const fileUploadmiddleware = require('../middleware/fileUpload')
 
 exports.addFood = async (req, res) => {
@@ -30,7 +29,7 @@ exports.addFood = async (req, res) => {
         // **********************
         try {
             const image = req.file
-            const imageUrl = await fileUploadmiddleware.uploadImage(image)
+            const imageUrl = await fileUploadmiddleware.uploadImage(image);
             var food = new Food({
                 foodname: req.body.foodname,
                 foodqty: quantity,

@@ -20,6 +20,7 @@ function getTime() {
 const {Storage} = require('@google-cloud/storage');
 const storage = new Storage({keyFilename: process.env.KEYFILE});
 const bucket = storage.bucket(process.env.BUCKET);
+
 exports.uploadImage = (file) => new Promise((resolve, reject) => {
     const {originalname, buffer} = file
     let fname = originalname.replace(originalname,getTime()+originalname)
@@ -28,14 +29,19 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
     const blob = bucket.file(fname)
     const blobStream = blob.createWriteStream({
         resumable: false
-    })
+    });
+
+    blobStream.on("error", (err) => {
+        res.status(500).send({ message: err.message });
+      });
+
     blobStream.on('finish', () => {
         const publicUrl = 'https://storage.googleapis.com/'+ process.env.BUCKET + '/'+ fname
         resolve(publicUrl)
     }).on('error', () => {
         reject(`Unable to upload image, something went wrong`)
     }).end(buffer)
-})
+});
 
 
 exports.deleteImage = (filename) => new Promise((resolve, reject) => {
