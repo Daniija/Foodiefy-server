@@ -207,11 +207,12 @@ exports.changePassword = (req, res) => {
                 bcrypt.compare(req.body.op, user.password).then(match => {
                     if (match) {
                         console.log("Your old password is correct");
-                        // console.log(req.body.p1);
+                        console.log(req.body.p1);
                         var p = User.hashPassword(req.body.p1)
                         User.updateOne({ email: req.email },
                             { password: p }, function (err, user) {
                                 if (err) {
+                                    console.log(err);
                                     res.json({ msg: "Somthing went wrong" });
                                 }
                                 else {
