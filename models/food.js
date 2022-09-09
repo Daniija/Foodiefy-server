@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var foodSchema = mongoose.Schema({
+let mongoose = require('mongoose');
+let foodSchema = mongoose.Schema({
     
     foodname: {
         type: String,
@@ -24,5 +24,5 @@ var foodSchema = mongoose.Schema({
     },
     createdAt: {type: Date, default: Date.now}
 })
-module.exports = mongoose.model('food',foodSchema)
+module.exports = mongoose.model('food',foodSchema);
 

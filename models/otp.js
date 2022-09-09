@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var otpSchema = mongoose.Schema({
+let mongoose = require('mongoose');
+let otpSchema = mongoose.Schema({
     otp: {
         type: Number,
         required: true
@@ -10,5 +10,5 @@ var otpSchema = mongoose.Schema({
     },
     createdAt: {type: Date, default: Date.now}
 })
-module.exports = mongoose.model('otp',otpSchema)
+module.exports = mongoose.model('otp',otpSchema);
 

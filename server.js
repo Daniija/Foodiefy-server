@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
-var cors = require('cors');
+let cors = require('cors');
 const helmet = require("helmet");
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
 const multer = require('multer');
 const PORT = process.env.PORT || 3000
 
 // all routes
-var authRoutes = require('./routes/authRoute')
-var adminRoutes = require('./routes/adminRoute')
-var userRoutes = require('./routes/userRoute')
+let authRoutes = require('./routes/authRoute')
+let adminRoutes = require('./routes/adminRoute')
+let userRoutes = require('./routes/userRoute')
 
 
 
@@ -41,8 +41,8 @@ app.use(multerMid.single('file'))
 const db = require('./database/db')();
 
 // socket connection
-var server = require('http').Server(app);
-var io = require('socket.io')(server,
+let server = require('http').Server(app);
+let io = require('socket.io')(server,
     
     
     {

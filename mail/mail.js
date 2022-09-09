@@ -1,7 +1,7 @@
 require('dotenv').config()
-var nodemailer = require('nodemailer');
+let nodemailer = require('nodemailer');
 function sendEmail(to,otp) {
-    var transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: 'mapeter234@gmail.com',
@@ -9,11 +9,11 @@ function sendEmail(to,otp) {
         }
     });
 
-    var str = "your otp = ";
-    var a =otp;
+    let str = "your otp = ";
+    let a =otp;
     str+=a;
     str += "\nOne Time Password is valid for 2mins"
-    var mailOptions = {
+    let mailOptions = {
         from: 'mapeter234@gmail.com',
         to: to,
         // cc:cc,

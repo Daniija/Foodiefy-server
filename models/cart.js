@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
-var cartSchema = mongoose.Schema({
+let cartSchema = mongoose.Schema({
     userid: {
         type: String,
     },
@@ -17,5 +17,5 @@ var cartSchema = mongoose.Schema({
     },
     createdAt: {type: Date, default: Date.now}
 })
-module.exports = mongoose.model('cart',cartSchema)
+module.exports = mongoose.model('cart',cartSchema);
 

@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var orderSchema = mongoose.Schema({
+let mongoose = require('mongoose');
+let orderSchema = mongoose.Schema({
     userid: {
         type: String,
     },
@@ -28,5 +28,5 @@ var orderSchema = mongoose.Schema({
     },
     orderdate: { type: String }
 })
-module.exports = mongoose.model('order', orderSchema)
+module.exports = mongoose.model('order', orderSchema);
 

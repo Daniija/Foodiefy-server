@@ -1,8 +1,8 @@
-// var multer = require('multer')
-require('dotenv').config()
+// var multer = require('multer');
+require('dotenv').config();
 // addfood image
 function getTime() {
-    var today = new Date().toLocaleDateString()
+    let today = new Date().toLocaleDateString()
     today = today.toString().replace('/', '-')
     today = today.replace('/', '-')
 
@@ -14,7 +14,7 @@ function getTime() {
     today += '-' + h + '-' + m + '-' + s
 
     return today+"-";
-}
+};
 
 // google cloud
 const {Storage} = require('@google-cloud/storage');
@@ -30,8 +30,6 @@ exports.uploadImage = (file) => new Promise((resolve, reject) => {
     const blobStream = blob.createWriteStream({
         resumable: false
     });
-
-    
 
     blobStream.on('finish', (err) => {
         console.log(err);

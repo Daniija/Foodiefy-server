@@ -1,9 +1,9 @@
-require('dotenv').config()
-var Food = require('../models/food')
-var User = require('../models/user')
-var Order = require('../models/order')
-var Feedback = require('../models/feedback')
-const fileUploadmiddleware = require('../middleware/fileUpload')
+require('dotenv').config();
+let Food = require('../models/food');
+let User = require('../models/user');
+let Order = require('../models/order');
+let Feedback = require('../models/feedback');
+const fileUploadmiddleware = require('../middleware/fileUpload');
 
 exports.addFood = async (req, res) => {
     let available;
@@ -30,7 +30,7 @@ exports.addFood = async (req, res) => {
         try {
             const image = req.file
             const imageUrl = await fileUploadmiddleware.uploadImage(image);
-            var food = new Food({
+            let food = new Food({
                 foodname: req.body.foodname,
                 foodqty: quantity,
                 foodprice: req.body.foodprice,
@@ -40,9 +40,9 @@ exports.addFood = async (req, res) => {
             })
             try {
                 doc = food.save();
-                console.log("Item has been added");
+                console.log("An Item has been added");
                 const io = req.app.get('io');
-                io.emit("Food Added", " Item has been added");
+                io.emit("Food Added", "An Item has been added");
                 return res.json({ msg: 'Item added' });
             }
             catch (err) {
@@ -62,20 +62,20 @@ exports.addFood = async (req, res) => {
     else {
         console.log("Invalid Quantity!");
         return res.json({ errormsg: 'Invalid Quantity!' });
-    }
-}
+    };
+};
 
 
 exports.getallFoodItem = (req, res) => {
 
     Food.find({}, (err, items) => {
         if (err) {
-            console.log("Cannot fetch item, Please try again!")
+            console.log("Cannot get items")
             res.status(500).json({ errormsg: 'Somthing went wrong' })
         }
         res.json({ msg: items })
-    })
-}
+    });
+};
 
 exports.editFood = (req, res) => {
     let available;
@@ -107,24 +107,22 @@ exports.editFood = (req, res) => {
         }, function (err, item) {
 
             if (err) {
-                console.log("Cannot edit item without an image attached");
+                console.log("The Item cannot be edited without an image attached");
                 return res.json({ errormsg: 'Somthing went wrong' });
             }
             else {
-                console.log("Cannot edit item without an image attached");
+                console.log("The Item cannot be edited without an image attached");
                 const io = req.app.get('io');
-                io.emit("Item Added", " Item has been added");
-                return res.json({ msg: 'Edited food without image' });
+                io.emit("Item Added", "An Item has been added");
+                return res.json({ msg: 'Item has been edited without an image' });
             }
-        })
+        });
     }
     else {
         console.log("Invalid Quantity!");
         return res.json({ errormsg: 'Invalid Quantity!' });
-    }
-
-
-}
+    };
+};
 
 exports.editFoodWithImage = async (req, res) => {
     let available;
@@ -151,12 +149,12 @@ exports.editFoodWithImage = async (req, res) => {
         try {
             Food.findOne({ _id: req.body._id }, async (err, data) => {
                 if (err) {
-                    console.log("Item Cannot be Deleted");
+                    console.log("Item could not be deleted");
                     return res.json({ errormsg: 'Somthing went wrong' });
                 }
                 else {
                     if (!data) {
-                        console.log("Item Cannot be Deleted");
+                        console.log("Item could not be deleted");
                         return res.json({ errormsg: 'Somthing went wrong' });
                     }
                     else {
@@ -172,18 +170,18 @@ exports.editFoodWithImage = async (req, res) => {
                                 foodavail: available
                             }, function (err, item) {
                                 if (err) {
-                                    console.log("Cannot edit item without an image attached")
+                                    console.log("The Item cannot be edited without an image attached")
                                     return res.json({ errormsg: 'Somthing went wrong' });
                                 }
                                 else {
-                                    console.log("Item has been Edited successfully");
+                                    console.log("Edited Successfully");
                                     const io = req.app.get('io');
-                                    io.emit("Food Added", " Item has been added");
-                                    return res.json({ msg: 'Edited food with image' });
+                                    io.emit("Food Added", "An item has been added");
+                                    return res.json({ msg: 'Successfully edited with an image' });
                                 }
                             })
                         } catch (error) {
-                            console.log("Item Cannot be Deleted");
+                            console.log("This item Cannot be Deleted");
                             return res.json({ errormsg: 'Somthing went wrong' });
                         }
 
@@ -194,7 +192,7 @@ exports.editFoodWithImage = async (req, res) => {
             })
         }
         catch (err) {
-            console.log("Error!! Item Cannot be Edited")
+            console.log("This item cannot be edited")
             return res.json({ errormsg: 'Somthing went wrong' });
         }
 
@@ -211,12 +209,12 @@ exports.deleteFood = (req, res) => {
 
     Food.findOne({ _id: req.params.id }, async (err, data) => {
         if (err) {
-            console.log("Item Cannot be Deleted");
+            console.log("This item cannot be deleted");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
             if (!data) {
-                console.log("Item Cannot be Deleted");
+                console.log("This item cannot be deleted");
                 return res.json({ errormsg: 'Somthing went wrong' });
             }
             else {
@@ -224,15 +222,15 @@ exports.deleteFood = (req, res) => {
                     var x = await fileUploadmiddleware.deleteImage(data.foodimage);
                     Food.deleteOne({ _id: req.params.id }, (error) => {
                         if (error) {
-                            console.log("Item Cannot be Deleted");
+                            console.log("This item cannot be deleted");
                             return res.json({ errormsg: 'Somthing went wrong' });
                         }
                     })
                     const io = req.app.get('io');
-                    io.emit("Food Added", " Item has been added");
-                    return res.json({ msg: 'Item has been Deleted' });
+                    io.emit("Food Added", "An Item has been added");
+                    return res.json({ msg: 'An item has been deleted' });
                 } catch (error) {
-                    console.log("Item Cannot be Deleted");
+                    console.log("This item cannot be deleted");
                     return res.json({ errormsg: 'Somthing went wrong' });
                 }
 
@@ -246,7 +244,7 @@ exports.deleteFood = (req, res) => {
 exports.getallUser = (req, res) => {
     User.find({ role: "user" }, (err, usr) => {
         if (err) {
-            console.log("Cannot get all users");
+            console.log("Error, cannot get all users");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
@@ -257,29 +255,29 @@ exports.getallUser = (req, res) => {
 
 
 exports.block = (req, res) => {
-    var id = req.params.id
+    let id = req.params.id
     User.updateOne({ _id: id }, { blocked: true }, (err, user) => {
         if (err) {
-            console.log("User Cannot be blocked");
-            return res.json({ errormsg: 'Somthing went wrong' });
+            console.log("This user cannot be blocked");
+            return res.json({ errormsg: 'This user cannot be blocked' });
         }
         else {
-            console.log("User Has been blocked");
-            res.status(201).json({ msg: "User has been blocked" });
+            console.log("This user has been blocked");
+            res.status(201).json({ msg: "This user has been blocked" });
         }
     })
 
 }
 exports.unblock = (req, res) => {
-    var id = req.params.id
+    let id = req.params.id
     User.updateOne({ _id: id }, { blocked: false }, (err, user) => {
         if (err) {
-            console.log("Error has occured,User Cannot be unblocked ");
+            console.log("An Error has occured,This user cannot be unblocked");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
-            console.log("User has been unblocked");
-            res.status(201).json({ msg: "unblocked user!" });
+            console.log("This user has been unblocked");
+            res.status(201).json({ msg: "unblocked user" });
         }
     })
 }
@@ -287,8 +285,8 @@ exports.unblock = (req, res) => {
 
 
 exports.getallOrders = (req, res) => {
-    var today = new Date();
-    var date = today.toJSON().slice(0, 10);
+    let today = new Date();
+    let date = today.toJSON().slice(0, 10);
     // unpaid
     // picked up
     Order.find({ $or: [{ status: { $ne: "picked up" } }, { paymentstatus: "unpaid" }], orderdate: date }, (err, orders) => {
@@ -338,7 +336,7 @@ exports.deleteOrder = (req, res) => {
 
 
 exports.getoneOrder = (req, res) => {
-    var id = req.params.id
+    let id = req.params.id
     Order.find({ _id: id }, (err, order) => {
         if (err) {
             console.log("Cannot get an Order");
@@ -350,7 +348,7 @@ exports.getoneOrder = (req, res) => {
 
 
 exports.getOneuser = (req, res) => {
-    var id = req.params.id
+    let id = req.params.id
     User.findOne({ _id: id }, (err, user) => {
         if (err) {
             console.log("Cannot get an Order");
@@ -362,8 +360,8 @@ exports.getOneuser = (req, res) => {
 
 
 exports.getorderHistory = (req, res) => {
-    var date = req.params.date
-    var emptyarray = []
+    let date = req.params.date
+    let emptyarray = []
     let total = 0;
     Order.find({ orderdate: date }, (err, orders) => {
         if (err) {
@@ -412,7 +410,7 @@ exports.updatePaymentstatus = (req, res) => {
 exports.getallFeedback = (req, res) => {
     Feedback.find({}, (err, feedbacks) => {
         if (err) {
-            console.log("There has been an error, cannot get feedback");
+            console.log("There has been an error, cannot get a feedback");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
         else {
@@ -430,5 +428,5 @@ exports.deleteFeedback = (req, res) => {
             return res.json({ errormsg: 'Somthing went wrong' });
         }
     })
-    return res.json({ msg: 'Feedback has been deleted successfully' });
+    return res.json({ msg: 'A user feedback has been deleted successfully' });
 }

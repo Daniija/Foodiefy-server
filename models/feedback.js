@@ -1,5 +1,5 @@
-var mongoose = require('mongoose')
-var feedbackSchema = mongoose.Schema({
+let mongoose = require('mongoose');
+let feedbackSchema = mongoose.Schema({
     userid: {
         type: String,
     },
@@ -14,5 +14,5 @@ var feedbackSchema = mongoose.Schema({
     },
     date: { type: String }
 })
-module.exports = mongoose.model('feedback', feedbackSchema)
+module.exports = mongoose.model('feedback', feedbackSchema);
 

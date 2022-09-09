@@ -1,9 +1,9 @@
-var User = require('../models/user')
-var Otp = require('../models/otp')
-const jwt = require('jsonwebtoken')
-var sendMail = require('../mail/mail')
-var bcrypt = require('bcrypt')
-require('dotenv').config()
+let User = require('../models/user');
+let Otp = require('../models/otp');
+const jwt = require('jsonwebtoken');
+let sendMail = require('../mail/mail');
+let bcrypt = require('bcrypt');
+require('dotenv').config();
 
 exports.getCheck = (req, res, next) => {
     res.json({ msg: "All ok" })
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
     User.find({ email: req.body.email }, (err, users) => {
 
         if (err) {
-            console.log("error in finding email ");
+            console.log("There was an error in finding the email.");
             res.json({ msg: "some error!" });
         }
         if (users.length != 0) {
@@ -35,13 +35,13 @@ exports.register = async (req, res) => {
                     res.json({ msg: "Error" });
                 }
                 else {
-                    console.log("User has been registered!");
-                    res.status(200).json({ message: "User has been registered!" })
+                    console.log("A User has been registered!");
+                    res.status(200).json({ message: "A User has been registered!" })
                 }
             })
         }
-    })
-}
+    });
+};
 
 
 exports.logIn = (req, res) => {
@@ -52,7 +52,7 @@ exports.logIn = (req, res) => {
         }
         else {
             if (!user) {
-                res.json({ msg: 'Email is Invalid' })
+                res.json({ msg: 'Your email is Invalid' })
             }
             else {
                 bcrypt.compare(req.body.p, user.password).then(match => {
@@ -74,41 +74,41 @@ exports.logIn = (req, res) => {
                 })
             }
         }
-    })
-}
+    });
+};
 
 function getEmail(email) {
     Otp.find({ email: email }, (err, otps) => {
 
         if (err) {
-            console.log("Email cannot be found");
+            console.log("Your Email cannot be found");
         }
         if (otps.length != 0) {
             console.log("Deleted");
             Otp.deleteOne({ email: email }, (err) => {
                 if (err)
-                    console.log("Error cannot be deleted");
+                    console.log("Error");
             }
             )
         }
-    })
+    });
 }
 
 exports.Reset = (req, res) => {
     User.find({ email: req.body.email }, async (err, users) => {
 
         if (err) {
-            console.log("Email cannot be found");
+            console.log("Your email cannot be found");
             res.json({ msg: "Error" });
         }
         if (users.length == 0) {
-            console.log("Email doesnt Exist");
-            res.json({ msg: "Email doesnt Exist" });
+            console.log("This email doesnt exist");
+            res.json({ msg: "This email doesnt exist" });
         }
         else {
             Otp.findOne({ email: req.body.email }, async (err, otp) => {
                 if (err) {
-                    console.log("Error, email couldnt be found");
+                    console.log("This email doesnt exist");
                     res.json({ msg: "Error" });
                 }
                 if (otp) {
@@ -142,10 +142,9 @@ exports.Reset = (req, res) => {
                         res.json({ msg: "some error!" });
                     }
                 }
-            })
-
-        }
-    })
+            });
+        };
+    });
 }
 
 
@@ -161,7 +160,6 @@ exports.resestPasswordDone = (req, res) => {
             }
             else {
                 Otp.findOne({ email: req.body.email }, async (err, otps) => {
-
                     if (err) {
                         res.json({ msg: "Somthing went wrong" });
                     }
@@ -185,16 +183,14 @@ exports.resestPasswordDone = (req, res) => {
                                     }
                                     else {
                                         res.json({ message: "Password has been updated successfully" });
-                                    }
-                                });
+                                }
+                            });
                         }
                     }
-                })
-
-
+                });
             }
         }
-    })
+    });
 }
 
 
@@ -210,7 +206,7 @@ exports.changePassword = (req, res) => {
             else {
                 bcrypt.compare(req.body.op, user.password).then(match => {
                     if (match) {
-                        console.log("Old password is correct");
+                        console.log("Your old password is correct");
                         // console.log(req.body.p1);
                         var p = User.hashPassword(req.body.p1)
                         User.updateOne({ email: req.email },
@@ -219,19 +215,19 @@ exports.changePassword = (req, res) => {
                                     res.json({ msg: "Somthing went wrong" });
                                 }
                                 else {
-                                    console.log("Password has been changed successfully");
-                                    res.status(200).json({ msg: "changed password" })
+                                    console.log("Your Password has been changed successfully");
+                                    res.status(200).json({ msg: "Your Password has been changed" });
                                 }
                             })
                     }
                     else {
-                        console.log("Password is Incorrect ");
-                        res.json({ msg: 'Password is Incorrect' })
+                        console.log("Your password is incorrect!");
+                        res.json({ msg: 'Your old password is incorrect!' });
                     }
                 }).catch(err => {
-                    res.json({ msg: 'Somthing went wrong' })
+                    res.json({ msg: 'Somthing went wrong' });
                 })
             }
         }
-    })
+    });
 }

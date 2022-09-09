@@ -1,8 +1,8 @@
-var User = require('../models/user')
-var Food = require('../models/food')
-var Cart = require('../models/cart')
-var Order = require('../models/order')
-var Feedback = require('../models/feedback')
+let Food = require('../models/food');
+let User = require('../models/user');
+let Cart = require('../models/cart');
+let Order = require('../models/order');
+let Feedback = require('../models/feedback');
 exports.myProfile = (req, res) => {
     User.findOne({ _id: req.userId }, (error, user) => {
         if (error) {
@@ -13,7 +13,7 @@ exports.myProfile = (req, res) => {
             res.status(200).json({ user: user, msg: "Your Profile is ok" })
         }
     }).select("-password").select("-blocked").select("-role")
-}
+};
 
 
 exports.editProfile = (req, res) => {
@@ -38,7 +38,7 @@ exports.editProfile = (req, res) => {
             console.log("Profile has been edited successfully");
             res.status(201).json({ msg: "edited profile", emailchange: emailchange });
         }
-    })
+    });
 }
 
 
@@ -79,10 +79,10 @@ function decrementQuantity(req, res, id) {
                     // **************************************************
                     console.log("edited(decrement) quantity");
                 }
-            })
+            });
         }
-    })
-}
+    });
+};
 
 function intcrementQuantity(req, res, id) {
     Food.findOne({ _id: id }, (error, item) => {
@@ -108,9 +108,9 @@ function intcrementQuantity(req, res, id) {
                     // **************************************************
                     console.log("edited(increment) quantity");
                 }
-            })
+            });
         }
-    })
+    });
 }
 
 function secondtimecart(req, res, oldcart, newitem) {
@@ -159,7 +159,7 @@ function secondtimecart(req, res, oldcart, newitem) {
                     console.log("Item quantity has gone up");
                 }
             }
-        })
+        });
     }
     else {
         console.log("not in cart");
@@ -189,9 +189,9 @@ function secondtimecart(req, res, oldcart, newitem) {
                     console.log("new item so no increment!");
                 }
             }
-        })
-    }
-}
+        });
+    };
+};
 
 exports.addtoCart = (req, res) => {
     Cart.findOne({ useremail: req.email }, (error, cart) => {
@@ -239,8 +239,7 @@ exports.addtoCart = (req, res) => {
                 res.json({ msg: "Success, your item has been added" })
             }
         }
-    })
-
+    });
 }
 
 
@@ -260,7 +259,7 @@ exports.getCount = (req, res) => {
             }
             res.json({ count: c })
         }
-    })
+    });
 }
 
 
@@ -273,8 +272,8 @@ exports.getCart = (req, res) => {
             res.json({ errormsg: "Something went Wrong!!" });
         }
         res.send(items)
-    })
-}
+    });
+};
 
 
 exports.deleteFromCart = (req, res) => {
@@ -325,7 +324,6 @@ exports.deleteFromCart = (req, res) => {
                     const io = req.app.get('io');
                     io.emit("cart", "item has been added or removed from the cart by user");
                     res.json({ msg: "item has been deleted from the cart", empty: true })
-
                 }
                 else {
                     Cart.updateOne({ _id: cart._id }, {
@@ -354,9 +352,8 @@ exports.deleteFromCart = (req, res) => {
                 }
             }
         }
-    })
-
-}
+    });
+};
 
 
 
