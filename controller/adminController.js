@@ -208,7 +208,9 @@ exports.editFoodWithImage = async (req, res) => {
 exports.deleteFood = (req, res) => {
 
     Food.findOne({ _id: req.params.id }, async (err, data) => {
+        console.log(req.params);
         if (err) {
+            console.log(err);
             console.log("This item cannot be deleted");
             return res.json({ errormsg: 'Somthing went wrong' });
         }
@@ -221,7 +223,9 @@ exports.deleteFood = (req, res) => {
                 try {
                     var x = await fileUploadmiddleware.deleteImage(data.foodimage);
                     Food.deleteOne({ _id: req.params.id }, (error) => {
+                        console.log(req.params);
                         if (error) {
+                            console.log(error);
                             console.log("This item cannot be deleted");
                             return res.json({ errormsg: 'Somthing went wrong' });
                         }
@@ -230,6 +234,7 @@ exports.deleteFood = (req, res) => {
                     io.emit("Food Added", "An Item has been added");
                     return res.json({ msg: 'An item has been deleted' });
                 } catch (error) {
+                    console.log(error);
                     console.log("This item cannot be deleted");
                     return res.json({ errormsg: 'Somthing went wrong' });
                 }
